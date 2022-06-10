@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "*.*.*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2.5.1
+        with:
+          node-version: 12
+
+      - name: Install Dependencies
+        env:
+          CI: true
+        run: |
+          npm install
+
+      - name: Package the module
+        id: pack
+        run: |
+          npm pack
+          PACKAGE_NAME=$(jq -r .name package.json)
+          PACKAGE_VERSION=$(jq -r .version package.json)
+          PACKAGE_PACK_FILE_NAME="$PACKAGE_NAME-$PACKAGE_VERSION.tgz"
+          echo "::set-output name=package::$PACKAGE_PACK_FILE_NAME"
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          append_body: true
+          files: |
+            ${{ steps.pack.outputs.package }}

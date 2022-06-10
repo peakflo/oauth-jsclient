@@ -1,8 +1,11 @@
 {
   "name": "intuit-oauth",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Intuit Node.js client for OAuth2.0 and OpenIDConnect",
   "main": "./src/OAuthClient.js",
+  "files": [
+    "src"
+  ],
   "scripts": {
     "start": "node index.js",
     "karma": "karma start karma.conf.js",
